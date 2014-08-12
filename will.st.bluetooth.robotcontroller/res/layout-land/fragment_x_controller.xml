@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id = "@+id/ControlFishControl"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" 
+    android:screenOrientation="landscape">
+
+    <ImageButton
+        android:id="@+id/forwards"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:src="@drawable/up" />
+
+    <ImageButton
+        android:id="@+id/left"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_below="@+id/forwards"
+        android:layout_toLeftOf="@+id/forwards"
+        android:src="@drawable/left"/>
+
+    <ImageButton
+        android:id="@+id/right"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_alignTop="@+id/left"
+        android:layout_toRightOf="@+id/reverse"
+        android:src="@drawable/right"/>
+
+    <ImageButton
+        android:id="@+id/reverse"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_alignLeft="@+id/forwards"
+        android:layout_below="@+id/right"
+        android:src="@drawable/down" />
+
+</RelativeLayout>
