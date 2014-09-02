@@ -14,26 +14,14 @@ public class ControllerActivity extends FragmentActivity implements
 		BtConnectFragment.BtConnectionMadeListener {
 
 	private final static String TAG = "bluetooth1";
+	// Tells us which controller fragment to use
 	private static String specifiedControllerFragment;
-	
-	private ControllerFragment controlFrag = null;
-	private BtConnectFragment connectFrag = null;
-	
-	public static String getSpecifiedControllerFragment() {
-		return specifiedControllerFragment;
-	}
 
-	public OutputStream getOutStream() {
-		return outStream;
-	}
-
-	public BluetoothSocket getBtSocket() {
-		return btSocket;
-	}
-
+	private ControllerFragment controlFrag;
+	private BtConnectFragment connectFrag;
 	// These are used to send data via Bluetooth.
-	private OutputStream outStream = null;
-	private BluetoothSocket btSocket = null;
+	private OutputStream outStream;
+	private BluetoothSocket btSocket;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -52,21 +40,13 @@ public class ControllerActivity extends FragmentActivity implements
 		super.onResume();
 		Log.d(TAG, "...In ControllerActivity onResume()...");
 
-		// Get any existing BtConnectFragment.
-		connectFrag = (BtConnectFragment) getSupportFragmentManager()
-				.findFragmentByTag("connect");
+		connectFrag = new BtConnectFragment();
+		getSupportFragmentManager()
+				.beginTransaction()
+				.replace(R.id.controller_fragment_container, connectFrag,
+						"connect").commit();
+		getSupportFragmentManager().executePendingTransactions();
 
-		// If there is no retained BtConnectFragment, create one.
-		if (connectFrag == null) {
-			Log.d(TAG, "In ControllerActivity onResume(),"
-					+ " creating and attaching new BtConnectFragment()");
-			connectFrag = new BtConnectFragment();
-			getSupportFragmentManager()
-					.beginTransaction()
-					.replace(R.id.controller_fragment_container, connectFrag,
-							"connect").commit();
-			getSupportFragmentManager().executePendingTransactions();
-		}
 	}
 
 	@Override
@@ -99,7 +79,8 @@ public class ControllerActivity extends FragmentActivity implements
 		}
 	}
 
-	// Called to start a ControllerFragment once connectFrag establishes a connection.
+	// Called to start a ControllerFragment once connectFrag establishes a
+	// connection.
 	public void onConnectionMade(BluetoothSocket btSocket,
 			OutputStream outStream) {
 		Log.d(TAG, "...In ControllerActivity onConnectionMade()...");
@@ -111,7 +92,8 @@ public class ControllerActivity extends FragmentActivity implements
 		Class<? extends ControllerFragment> controllerFragmentSubclass = null;
 		Constructor<?> cons = null;
 
-		// Get the required subclass of ControllerFragment.
+		// Get the required subclass of ControllerFragment based on
+		// information from the intent which started this activity.
 		try {
 			controllerFragmentSubclass = Class.forName(
 					specifiedControllerFragment).asSubclass(
@@ -141,19 +123,31 @@ public class ControllerActivity extends FragmentActivity implements
 			e.printStackTrace();
 		}
 
-		// Replace the BtConnectionFragment with our instance of a
-		// ControlFragment subclass.
+		// Replace the BtConnectionFragment with our instance of the
+		// ControllerFragment subclass.
 		getSupportFragmentManager()
 				.beginTransaction()
 				.replace(R.id.controller_fragment_container, controlFrag,
 						"control").commit();
 	}
-	
+
 	public ControllerFragment getControlFrag() {
 		return controlFrag;
 	}
 
 	public BtConnectFragment getConnectFrag() {
 		return connectFrag;
+	}
+
+	public OutputStream getOutStream() {
+		return outStream;
+	}
+
+	public BluetoothSocket getBtSocket() {
+		return btSocket;
+	}
+
+	public String getSpecifiedControllerFragment() {
+		return specifiedControllerFragment;
 	}
 }

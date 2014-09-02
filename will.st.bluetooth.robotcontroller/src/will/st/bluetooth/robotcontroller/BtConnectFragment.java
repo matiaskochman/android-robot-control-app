@@ -36,6 +36,7 @@ public class BtConnectFragment extends Fragment {
 	private static String address;
 
 	private ConnectBtTask connectionThread;
+	private boolean connectionMade;
 
 	// These are used establish a connection and send data via Bluetooth.
 	private BluetoothAdapter btAdapter;
@@ -77,6 +78,7 @@ public class BtConnectFragment extends Fragment {
 	@Override
 	public void onResume() {
 		super.onResume();
+		connectionMade = false;
 		Log.d(TAG, "...In BtConnectFragment onResume...");
 		connectionThread = new ConnectBtTask();
 		connectionThread.execute();
@@ -84,12 +86,37 @@ public class BtConnectFragment extends Fragment {
 
 	public void onPause() {
 		super.onPause();
-		Log.d(TAG, "...In BtConnectFragment onPause...");
-		outStream = null;
-		btSocket = null;
+		Log.d(TAG, "...In BtConnectFragment onPause()...");
+		if (connectionMade == false) {
+			closeConnection();
+		}
 		connectionThread.cancel(true);
 	}
 
+	private void closeConnection() {
+		if (outStream != null) {
+			try {
+				outStream.flush();
+			} catch (IOException e) {
+				Log.e(TAG, "In closeConnection(),),"
+						+ " failed to flush output stream.", e);
+			}
+			outStream = null;
+		}
+
+		Log.d(TAG, "In closeConnection(),"
+				+ " closing bluetooth socket.");
+		if (btSocket != null) {
+			try {
+				btSocket.close();
+			} catch (IOException e) {
+				Log.e(TAG, "In closeConnection(),"
+						+ " failed to close bluetooth socket.", e);
+			}
+			btSocket = null;
+		}
+	}
+	
 	public BtConnectionMadeListener getParentActivity() {
 		return parentActivity;
 	}
@@ -142,8 +169,10 @@ public class BtConnectFragment extends Fragment {
 				}
 			}
 
-			if (isCancelled())
+			if (isCancelled()) {
+				closeConnection();
 				return null;
+			}
 
 			if (outStream == null) {
 				Log.d(TAG, "In doInBackground(Void... params),"
@@ -151,13 +180,21 @@ public class BtConnectFragment extends Fragment {
 				int connectionResult = establishBtConnection();
 				if (connectionResult == -1)
 					return "Connection Failed";
-				if (isCancelled())
+				if (isCancelled()) {
+					closeConnection();
 					return null;
+				}
 
 				Log.d(TAG, "In doInBackground(Void... params),"
 						+ " creating on output stream.");
 				createOutputStream();
 			}
+
+			if (isCancelled()) {
+				closeConnection();
+				return null;
+			}
+
 			Log.d(TAG, "In doInBackground(Void... params),"
 					+ " bluetooth setup complete.");
 			return "Connection made";
@@ -171,7 +208,7 @@ public class BtConnectFragment extends Fragment {
 		@Override
 		protected void onPostExecute(String result) {
 			Log.d(TAG, "In onPostExecute(String result)");
-
+			
 			switch (result) {
 			case "Connection Failed":
 				Log.d(TAG,
@@ -180,6 +217,7 @@ public class BtConnectFragment extends Fragment {
 				break;
 			case "Connection made":
 				Log.d(TAG, "In onPostExecute(String result), connection made!");
+				connectionMade = true;
 				parentActivity.onConnectionMade(btSocket, outStream);
 				break;
 			case "Bluetooth not supported":
