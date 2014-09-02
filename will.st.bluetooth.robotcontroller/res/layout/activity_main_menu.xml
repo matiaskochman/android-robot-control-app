@@ -6,12 +6,11 @@
     tools:context="${relativePackage}.${activityClass}" >
 
     <ImageButton
-        android:id="@+id/x"
+        android:id="@+id/x_button"
         android:layout_width="120dp"
         android:layout_height="120dp"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
-        android:onClick="startXController"
         android:src="@drawable/x" />
 
 </RelativeLayout>
