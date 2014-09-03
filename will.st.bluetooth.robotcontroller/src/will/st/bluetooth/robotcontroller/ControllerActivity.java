@@ -28,8 +28,8 @@ public class ControllerActivity extends FragmentActivity implements
 		super.onCreate(savedInstanceState);
 		Log.d(TAG, "...In ControllerActivity "
 				+ "onCreate(Bundle savedInstanceState)...");
-
 		setContentView(R.layout.activity_controller);
+		
 		// Receive intent, store the specified ControllerFragment.
 		specifiedControllerFragment = getIntent().getStringExtra(
 				MainMenuActivity.CONTROLLER_FRAGMENT);
@@ -39,11 +39,12 @@ public class ControllerActivity extends FragmentActivity implements
 	protected void onResume() {
 		super.onResume();
 		Log.d(TAG, "...In ControllerActivity onResume()...");
-
+		
+		// Start and show a BTConnectFragment.
 		connectFrag = new BtConnectFragment();
 		getSupportFragmentManager()
 				.beginTransaction()
-				.replace(R.id.controller_fragment_container, connectFrag,
+				.replace(R.id.controller_activity_frame_layout, connectFrag,
 						"connect").commit();
 		getSupportFragmentManager().executePendingTransactions();
 
@@ -79,8 +80,8 @@ public class ControllerActivity extends FragmentActivity implements
 		}
 	}
 
-	// Called to start a ControllerFragment once connectFrag establishes a
-	// connection.
+	// Called to swap our ConnectFragment for a ControllerFragment once 
+	// connectFrag establishes a connection.
 	public void onConnectionMade(BluetoothSocket btSocket,
 			OutputStream outStream) {
 		Log.d(TAG, "...In ControllerActivity onConnectionMade()...");
@@ -127,27 +128,7 @@ public class ControllerActivity extends FragmentActivity implements
 		// ControllerFragment subclass.
 		getSupportFragmentManager()
 				.beginTransaction()
-				.replace(R.id.controller_fragment_container, controlFrag,
+				.replace(R.id.controller_activity_frame_layout, controlFrag,
 						"control").commit();
-	}
-
-	public ControllerFragment getControlFrag() {
-		return controlFrag;
-	}
-
-	public BtConnectFragment getConnectFrag() {
-		return connectFrag;
-	}
-
-	public OutputStream getOutStream() {
-		return outStream;
-	}
-
-	public BluetoothSocket getBtSocket() {
-		return btSocket;
-	}
-
-	public String getSpecifiedControllerFragment() {
-		return specifiedControllerFragment;
 	}
 }

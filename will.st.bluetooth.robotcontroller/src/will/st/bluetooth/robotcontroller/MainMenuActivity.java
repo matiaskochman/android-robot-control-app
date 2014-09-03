@@ -13,7 +13,7 @@ public class MainMenuActivity extends Activity {
 	private static final String TAG = "bluetooth1";
 	private ImageButton xButton;
 	
-	// Name for the String which we will send via intent.
+	// Tag for the String which we will be put into our intent.
 	public final static String CONTROLLER_FRAGMENT = "Controller fragment name";
 
 	@Override

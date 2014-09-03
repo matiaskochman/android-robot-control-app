@@ -32,7 +32,7 @@ public class MainMenuActivityUITest extends ActivityInstrumentationTestCase2<Mai
     }
 	
 	public void testPreconditions() {
-	    assertNotNull("mMainMenuActivity is null", activity);
+	    assertNotNull("activity is null", activity);
 	    assertNotNull("xButton is null”, xButton");
 	}
 	

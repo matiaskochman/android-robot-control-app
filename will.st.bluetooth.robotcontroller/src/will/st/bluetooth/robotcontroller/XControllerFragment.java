@@ -15,7 +15,6 @@ public class XControllerFragment extends ControllerFragment {
 
 	private static final String TAG = "bluetooth1";
 
-	// UI buttons
 	ImageButton forwardsButton;
 	ImageButton reverseButton;
 	ImageButton leftButton;

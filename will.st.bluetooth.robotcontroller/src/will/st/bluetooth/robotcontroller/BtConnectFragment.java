@@ -35,7 +35,9 @@ public class BtConnectFragment extends Fragment {
 			.fromString("00001101-0000-1000-8000-00805F9B34FB");
 	private static String address;
 
+	// An AsyncTask to make our Bluetooth connection in the background
 	private ConnectBtTask connectionThread;
+	
 	private boolean connectionMade;
 
 	// These are used establish a connection and send data via Bluetooth.
@@ -78,8 +80,8 @@ public class BtConnectFragment extends Fragment {
 	@Override
 	public void onResume() {
 		super.onResume();
-		connectionMade = false;
 		Log.d(TAG, "...In BtConnectFragment onResume...");
+		connectionMade = false;
 		connectionThread = new ConnectBtTask();
 		connectionThread.execute();
 	}
@@ -87,6 +89,8 @@ public class BtConnectFragment extends Fragment {
 	public void onPause() {
 		super.onPause();
 		Log.d(TAG, "...In BtConnectFragment onPause()...");
+		// Make sure Bluetooth connection is closed properly if app is paused
+		// during connection.
 		if (connectionMade == false) {
 			closeConnection();
 		}
@@ -104,8 +108,7 @@ public class BtConnectFragment extends Fragment {
 			outStream = null;
 		}
 
-		Log.d(TAG, "In closeConnection(),"
-				+ " closing bluetooth socket.");
+		Log.d(TAG, "In closeConnection()," + " closing bluetooth socket.");
 		if (btSocket != null) {
 			try {
 				btSocket.close();
@@ -116,7 +119,7 @@ public class BtConnectFragment extends Fragment {
 			btSocket = null;
 		}
 	}
-	
+
 	public BtConnectionMadeListener getParentActivity() {
 		return parentActivity;
 	}
@@ -202,13 +205,9 @@ public class BtConnectFragment extends Fragment {
 		}
 
 		@Override
-		protected void onProgressUpdate(Void... values) {
-		}
-
-		@Override
 		protected void onPostExecute(String result) {
 			Log.d(TAG, "In onPostExecute(String result)");
-			
+
 			switch (result) {
 			case "Connection Failed":
 				Log.d(TAG,
@@ -331,7 +330,6 @@ public class BtConnectFragment extends Fragment {
 			Log.d(TAG, "..In onConnectFailed()...");
 			ControllerActivity parentActivity = (ControllerActivity) getParentActivity();
 
-			// Show a toast.
 			Context context = parentActivity.getApplicationContext();
 			CharSequence text = "Bluetooth connection failed";
 			Toast.makeText(context, text, Toast.LENGTH_SHORT).show();
@@ -344,7 +342,6 @@ public class BtConnectFragment extends Fragment {
 			Log.d(TAG, "..In bluetoothNotSupported()...");
 			ControllerActivity parentActivity = (ControllerActivity) getParentActivity();
 
-			// Show a toast.
 			Context context = parentActivity.getApplicationContext();
 			CharSequence text = "Bluetooth not supported by device.";
 			Toast.makeText(context, text, Toast.LENGTH_SHORT).show();
