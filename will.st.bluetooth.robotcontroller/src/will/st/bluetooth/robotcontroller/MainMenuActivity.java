@@ -13,8 +13,8 @@ public class MainMenuActivity extends Activity {
 	private static final String TAG = "bluetooth1";
 	private ImageButton xButton;
 	
-	// Tag for the String which we will be put into our intent.
-	public final static String CONTROLLER_FRAGMENT = "Controller fragment name";
+	// Key for the info which we will be put into our intent.
+	public static final String FRAGMENT_KEY = "Specific controller fragment name";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -32,12 +32,16 @@ public class MainMenuActivity extends Activity {
 
 			Intent controllerActivityIntent = new Intent(getApplicationContext(), ControllerActivity.class);
 			// This will inform the next activity which ControllerFragment to use.
-			controllerActivityIntent.putExtra(CONTROLLER_FRAGMENT,
+			controllerActivityIntent.putExtra(getFragmentKey(),
 					"will.st.bluetooth.robotcontroller.XControllerFragment");
 
 			Log.d(TAG, "In MainMenuActivity startXController(View view),"
 					+ " starting ControllerActivity.");
 			startActivity(controllerActivityIntent);
 		}	
+	}
+	
+	public static String getFragmentKey() {
+		return FRAGMENT_KEY;
 	}
 }

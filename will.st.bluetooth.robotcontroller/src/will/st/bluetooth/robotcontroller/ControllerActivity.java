@@ -32,7 +32,9 @@ public class ControllerActivity extends FragmentActivity implements
 		
 		// Receive intent, store the specified ControllerFragment.
 		specifiedControllerFragment = getIntent().getStringExtra(
-				MainMenuActivity.CONTROLLER_FRAGMENT);
+				MainMenuActivity.getFragmentKey());
+		
+		connectFrag = new BtConnectFragment();
 	}
 
 	@Override
@@ -41,7 +43,6 @@ public class ControllerActivity extends FragmentActivity implements
 		Log.d(TAG, "...In ControllerActivity onResume()...");
 		
 		// Start and show a BTConnectFragment.
-		connectFrag = new BtConnectFragment();
 		getSupportFragmentManager()
 				.beginTransaction()
 				.replace(R.id.controller_activity_frame_layout, connectFrag,
@@ -130,5 +131,14 @@ public class ControllerActivity extends FragmentActivity implements
 				.beginTransaction()
 				.replace(R.id.controller_activity_frame_layout, controlFrag,
 						"control").commit();
+	}
+	
+	public void setConnectFrag(BtConnectFragment connectFrag) {
+		this.connectFrag = connectFrag;
+	}
+	
+	public static void setSpecifiedControllerFragment(
+			String specifiedControllerFragment) {
+		ControllerActivity.specifiedControllerFragment = specifiedControllerFragment;
 	}
 }
