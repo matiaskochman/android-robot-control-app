@@ -37,7 +37,7 @@ public class BtConnectFragment extends Fragment {
 
 	// An AsyncTask to make our Bluetooth connection in the background
 	private ConnectBtTask connectionThread;
-	
+
 	private boolean connectionMade;
 
 	// These are used establish a connection and send data via Bluetooth.
@@ -59,8 +59,6 @@ public class BtConnectFragment extends Fragment {
 		// This makes sure that the container activity has implemented
 		// the callback interface.
 		try {
-			Log.d(TAG, "...In BtConnectFragment"
-					+ "onAttach(Activity activity), setting callback activity.");
 			parentActivity = (BtConnectionMadeListener) activity;
 		} catch (ClassCastException e) {
 			Log.e(TAG, "In BtConnectFragment onAttach, container activity"
@@ -120,33 +118,28 @@ public class BtConnectFragment extends Fragment {
 		}
 	}
 
-	public BtConnectionMadeListener getParentActivity() {
-		return parentActivity;
-	}
-
 	private class ConnectBtTask extends AsyncTask<Void, Void, String> {
+		private Exception connectionFailedException = null;
+
 		@Override
 		protected String doInBackground(Void... params) {
 
 			Log.d(TAG, "...In doInBackground(Void... params)...");
 
 			if (btAdapter == null) {
-				Log.d(TAG, "In doInBackground(Void... params),"
-						+ " getting local Bluetooth adapter.");
-				btAdapter = BluetoothAdapter.getDefaultAdapter();
-				int checkResult = checkDeviceSupportsBluetooth();
-				if (checkResult == -1)
-					return "Bluetooth not supported";
+				try {
+					checkDeviceSupportsBluetooth();
+				} catch (ConnectionFailedException ex) {
+					connectionFailedException = ex;
+					return null;
+				}
+				if (isCancelled())
+					return null;
 			}
 
-			if (isCancelled())
-				return null;
-
-			if (btSocket == null) {
-				Log.d(TAG, "In doInBackground(Void... params),"
-						+ " enabling Bluetooth.");
-				enableBluetooth();
-			}
+			Log.d(TAG, "In doInBackground(Void... params),"
+					+ " enabling Bluetooth.");
+			enableBluetooth();
 
 			if (isCancelled())
 				return null;
@@ -154,22 +147,38 @@ public class BtConnectFragment extends Fragment {
 			if (address == null) {
 				Log.d(TAG, "In doInBackground(Void... params),"
 						+ " getting remote device MAC address.");
-				obtainRemoteDeviceMacAddress();
+				try {
+					obtainRemoteDeviceMacAddress();
+				} catch (ConnectionFailedException ex) {
+					connectionFailedException = ex;
+					return null;
+				}
+				if (isCancelled())
+					return null;
+
 			}
 
-			if (isCancelled())
+			Log.d(TAG, "In doInBackground(Void... params),"
+					+ " setting up Bluetooth socket for remote device.");
+			BluetoothDevice device = btAdapter.getRemoteDevice(address);
+			try {
+				btSocket = createBluetoothSocket(device);
+			} catch (ConnectionFailedException ex) {
+				connectionFailedException = ex;
 				return null;
+			}
+			if (isCancelled()) {
+				closeConnection();
+				return null;
+			}
 
-			if (btSocket == null) {
-				Log.d(TAG, "In doInBackground(Void... params),"
-						+ " setting up Bluetooth socket for remote device.");
-				BluetoothDevice device = btAdapter.getRemoteDevice(address);
-				try {
-					btSocket = createBluetoothSocket(device);
-				} catch (IOException e) {
-					Log.e(TAG, "In doInBackground(Void... params) "
-							+ "and socket creation failed.", e);
-				}
+			Log.d(TAG, "In doInBackground(Void... params),"
+					+ " establishing Bluetooth connection.");
+			try {
+				int connectionResult = establishBtConnection();
+			} catch (ConnectionFailedException ex) {
+				connectionFailedException = ex;
+				return null;
 			}
 
 			if (isCancelled()) {
@@ -177,22 +186,14 @@ public class BtConnectFragment extends Fragment {
 				return null;
 			}
 
-			if (outStream == null) {
-				Log.d(TAG, "In doInBackground(Void... params),"
-						+ " establishing Bluetooth connection.");
-				int connectionResult = establishBtConnection();
-				if (connectionResult == -1)
-					return "Connection Failed";
-				if (isCancelled()) {
-					closeConnection();
-					return null;
-				}
-
-				Log.d(TAG, "In doInBackground(Void... params),"
-						+ " creating on output stream.");
+			Log.d(TAG, "In doInBackground(Void... params),"
+					+ " creating on output stream.");
+			try {
 				createOutputStream();
+			} catch (ConnectionFailedException ex) {
+				connectionFailedException = ex;
+				return null;
 			}
-
 			if (isCancelled()) {
 				closeConnection();
 				return null;
@@ -208,32 +209,32 @@ public class BtConnectFragment extends Fragment {
 		protected void onPostExecute(String result) {
 			Log.d(TAG, "In onPostExecute(String result)");
 
-			switch (result) {
-			case "Connection Failed":
+			if (connectionFailedException != null) {
+				ControllerActivity parentActivity = (ControllerActivity) getParentActivity();
+
+				Context context = parentActivity.getApplicationContext();
+				CharSequence text = connectionFailedException.getMessage();
+				Toast.makeText(context, text, Toast.LENGTH_SHORT).show();
+				// Return to main menu.
 				Log.d(TAG,
-						"In onPostExecute(String result), connection failed.");
-				onConnectionFailed();
-				break;
-			case "Connection made":
-				Log.d(TAG, "In onPostExecute(String result), connection made!");
+						"In onPostExecute(), connection failed so finishing activity");
+				parentActivity.finish();
+			}
+
+			if (result != null) {
 				connectionMade = true;
 				parentActivity.onConnectionMade(btSocket, outStream);
-				break;
-			case "Bluetooth not supported":
-				Log.d(TAG,
-						"In onPostExecute(String result), Bluetooth not supported");
-				bluetoothNotSupported();
-				break;
 			}
 		}
 
-		private int checkDeviceSupportsBluetooth() {
+		private int checkDeviceSupportsBluetooth()
+				throws ConnectionFailedException {
 			Log.d(TAG, "In checkDeviceSupportsBluetooth(), checking"
 					+ "if device supports bluetooth...");
+			btAdapter = BluetoothAdapter.getDefaultAdapter();
 			if (btAdapter == null) {
-				Log.d(TAG, "In checkDeviceSupportsBluetooth(), device"
-						+ "does not support bluetooth");
-				return -1;
+				throw new ConnectionFailedException(
+						"Device does not support Bluetooth");
 			}
 			return 0;
 		}
@@ -249,17 +250,19 @@ public class BtConnectFragment extends Fragment {
 				Intent enableBtIntent = new Intent(
 						BluetoothAdapter.ACTION_REQUEST_ENABLE);
 				startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
-				while (!btAdapter.isEnabled()) {
-					try {
-						Thread.sleep(100);
-					} catch (InterruptedException ex) {
-						Thread.currentThread().interrupt();
-					}
+
+				try {
+					Log.d(TAG, "In enableBluetooth(), going to sleep");
+					Thread.sleep(100);
+				} catch (InterruptedException ex) {
+					Thread.currentThread().interrupt();
 				}
 			}
 		}
 
-		private void obtainRemoteDeviceMacAddress() {
+		private void obtainRemoteDeviceMacAddress()
+				throws ConnectionFailedException {
+
 			if (address == null) {
 				Log.d(TAG, "...In obtainRemoteDeviceMacAddress()...");
 				Set<BluetoothDevice> pairedDevices = btAdapter
@@ -271,10 +274,12 @@ public class BtConnectFragment extends Fragment {
 					for (BluetoothDevice device : pairedDevices) {
 						if (device.getName().equals("fish")) {
 							address = device.getAddress();
-						} else {
-							Log.d(TAG, "In obtainRemoteDeviceMacAddress() and"
-									+ "remote device MAC address  not found...");
 						}
+					}
+					if (address == null) {
+						Log.d(TAG, "In obtainRemoteDeviceMacAddress() and"
+								+ "remote device MAC address  not found...");
+						throw new ConnectionFailedException("Connection Failed");
 					}
 				}
 				// Stop resource intensive device discovery.
@@ -283,7 +288,7 @@ public class BtConnectFragment extends Fragment {
 		}
 
 		private BluetoothSocket createBluetoothSocket(BluetoothDevice device)
-				throws IOException {
+				throws ConnectionFailedException {
 			Log.d(TAG, "...In createBluetoothSocket(BluetoothDevice device)...");
 			// Create a Bluetooth socket using MAC address and serial port UUID
 			// of remote device.
@@ -298,24 +303,29 @@ public class BtConnectFragment extends Fragment {
 							"In createBluetoothSocket(BluetoothDevice device), could"
 									+ " not create Insecure RFComm Connection",
 							e);
+					throw new ConnectionFailedException("Connection Failed");
 				}
 			}
-			return device.createRfcommSocketToServiceRecord(MY_UUID);
+			try {
+				return device.createRfcommSocketToServiceRecord(MY_UUID);
+			} catch (IOException ex) {
+				throw new ConnectionFailedException("Connection failed");
+			}
 		}
 
-		private int establishBtConnection() {
+		private int establishBtConnection() throws ConnectionFailedException {
 			Log.d(TAG, "In establishBtConnection() and connecting");
 			try {
 				btSocket.connect();
 			} catch (IOException e) {
 				Log.e(TAG, "In establishBtConnection() and Connection failed",
 						e);
-				return -1;
+				throw new ConnectionFailedException("Connection Failed");
 			}
 			return 0;
 		}
 
-		private void createOutputStream() {
+		private void createOutputStream() throws ConnectionFailedException {
 			Log.d(TAG, "In createOutputStream()  and creating data output"
 					+ "stream to remote device...");
 			try {
@@ -323,32 +333,17 @@ public class BtConnectFragment extends Fragment {
 			} catch (IOException e) {
 				Log.e(TAG, "In createOutputStream() and"
 						+ "output stream creation failed:", e);
+				throw new ConnectionFailedException("Connection Failed");
 			}
 		}
-
-		private void onConnectionFailed() {
-			Log.d(TAG, "..In onConnectFailed()...");
-			ControllerActivity parentActivity = (ControllerActivity) getParentActivity();
-
-			Context context = parentActivity.getApplicationContext();
-			CharSequence text = "Bluetooth connection failed";
-			Toast.makeText(context, text, Toast.LENGTH_SHORT).show();
-			// Return to main menu.
-			Log.d(TAG, "In onConnectFailed(), finishing activity");
-			parentActivity.finish();
-		}
-
-		private void bluetoothNotSupported() {
-			Log.d(TAG, "..In bluetoothNotSupported()...");
-			ControllerActivity parentActivity = (ControllerActivity) getParentActivity();
-
-			Context context = parentActivity.getApplicationContext();
-			CharSequence text = "Bluetooth not supported by device.";
-			Toast.makeText(context, text, Toast.LENGTH_SHORT).show();
-
-			// Return to main menu
-			Log.d(TAG, "In bluetoothNotSupported(), finishing activity");
-			parentActivity.finish();
-		}
 	}
+
+	public BtConnectionMadeListener getParentActivity() {
+		return parentActivity;
+	}
+
+	public void setParentActivity(BtConnectionMadeListener parentActivity) {
+		this.parentActivity = parentActivity;
+	}
+
 }
