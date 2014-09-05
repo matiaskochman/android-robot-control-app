@@ -1,7 +1,6 @@
 package will.st.bluetooth.robot.controller.test;
 
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.assertFalse;
 
 import java.io.OutputStream;
 
