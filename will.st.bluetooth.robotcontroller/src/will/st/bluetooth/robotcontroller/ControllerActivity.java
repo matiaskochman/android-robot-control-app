@@ -30,10 +30,9 @@ public class ControllerActivity extends FragmentActivity implements
 				+ "onCreate(Bundle savedInstanceState)...");
 		setContentView(R.layout.activity_controller);
 		
-		// Receive intent, store the specified ControllerFragment.
 		specifiedControllerFragment = getIntent().getStringExtra(
 				MainMenuActivity.getFragmentKey());
-		
+
 		connectFrag = new BtConnectFragment();
 	}
 
@@ -54,6 +53,7 @@ public class ControllerActivity extends FragmentActivity implements
 	@Override
 	protected void onPause() {
 		super.onPause();
+		
 		Log.d(TAG, "...In ControllerActivity onPause()...");
 
 		Log.d(TAG, "In ControllerActivity onPause(),"
@@ -78,6 +78,7 @@ public class ControllerActivity extends FragmentActivity implements
 						+ " failed to close socket.", e);
 			}
 			btSocket = null;
+			finish();
 		}
 	}
 
@@ -102,7 +103,7 @@ public class ControllerActivity extends FragmentActivity implements
 					ControllerFragment.class);
 		} catch (ClassNotFoundException e) {
 			Log.e(TAG, "In ControllerActivity onConnectionMade(),"
-					+ " could not find specifeid ControllerFragment.", e);
+					+ " could not find specified ControllerFragment.", e);
 		}
 
 		// Get this subclass's constructor.
@@ -140,5 +141,10 @@ public class ControllerActivity extends FragmentActivity implements
 	public static void setSpecifiedControllerFragment(
 			String specifiedControllerFragment) {
 		ControllerActivity.specifiedControllerFragment = specifiedControllerFragment;
+	}
+	
+	public void onDestroy() {
+		super.onDestroy();
+		Log.d(TAG, "...In ControllerActivity onDestroy()");
 	}
 }
