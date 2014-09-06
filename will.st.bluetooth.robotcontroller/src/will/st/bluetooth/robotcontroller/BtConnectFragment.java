@@ -306,6 +306,7 @@ public class BtConnectFragment extends Fragment {
 					throw new ConnectionFailedException("Connection Failed");
 				}
 			}
+			
 			try {
 				return device.createRfcommSocketToServiceRecord(MY_UUID);
 			} catch (IOException ex) {
