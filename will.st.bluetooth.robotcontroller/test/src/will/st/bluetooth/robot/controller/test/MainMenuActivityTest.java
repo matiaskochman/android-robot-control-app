@@ -11,8 +11,8 @@ import org.robolectric.annotation.Config;
 import org.robolectric.shadows.ShadowActivity;
 import org.robolectric.util.ActivityController;
 
-import will.st.bluetooth.robotcontroller.ControllerActivity;
-import will.st.bluetooth.robotcontroller.MainMenuActivity;
+import will.st.bluetooth.robot.controller.ControllerActivity;
+import will.st.bluetooth.robot.controller.MainMenuActivity;
 import will.st.bluetooth.robotcontroller.R;
 import android.content.Intent;
 

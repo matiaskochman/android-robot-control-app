@@ -1,4 +1,4 @@
-package will.st.bluetooth.robotcontroller;
+package will.st.bluetooth.robot.controller;
 
 public class ConnectionFailedException extends Exception{
 	public ConnectionFailedException(String message){

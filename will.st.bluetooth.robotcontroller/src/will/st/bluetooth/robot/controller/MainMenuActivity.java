@@ -1,5 +1,6 @@
-package will.st.bluetooth.robotcontroller;
+package will.st.bluetooth.robot.controller;
 
+import will.st.bluetooth.robotcontroller.R;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;

@@ -1,6 +1,8 @@
-package will.st.bluetooth.robotcontroller;
+package will.st.bluetooth.robot.controller.controllers;
 
 import java.io.OutputStream;
+
+import will.st.bluetooth.robotcontroller.R;
 
 import android.os.Bundle;
 import android.util.Log;

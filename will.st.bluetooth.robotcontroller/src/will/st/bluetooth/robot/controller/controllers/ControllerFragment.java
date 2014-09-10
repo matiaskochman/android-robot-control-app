@@ -1,4 +1,4 @@
-package will.st.bluetooth.robotcontroller;
+package will.st.bluetooth.robot.controller.controllers;
 
 import java.io.IOException;
 import java.io.OutputStream;

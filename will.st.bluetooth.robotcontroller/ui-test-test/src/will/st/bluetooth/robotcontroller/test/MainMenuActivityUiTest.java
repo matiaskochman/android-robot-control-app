@@ -2,7 +2,7 @@ package will.st.bluetooth.robotcontroller.test;
 
 import org.junit.Test;
 
-import will.st.bluetooth.robotcontroller.MainMenuActivity;
+import will.st.bluetooth.robot.controller.MainMenuActivity;
 import android.test.ActivityInstrumentationTestCase2;
 import android.test.ViewAsserts;
 import android.widget.ImageButton;

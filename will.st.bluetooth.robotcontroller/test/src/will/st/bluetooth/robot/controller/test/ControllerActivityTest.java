@@ -12,8 +12,8 @@ import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 import org.robolectric.util.ActivityController;
 
-import will.st.bluetooth.robotcontroller.BtConnectFragment;
-import will.st.bluetooth.robotcontroller.ControllerActivity;
+import will.st.bluetooth.robot.controller.BtConnectFragment;
+import will.st.bluetooth.robot.controller.ControllerActivity;
 import android.bluetooth.BluetoothSocket;
 import android.support.v4.app.FragmentManager;
 

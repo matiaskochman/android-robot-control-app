@@ -1,6 +1,7 @@
-package will.st.bluetooth.robotcontroller;
+package will.st.bluetooth.robot.controller.controllers;
 
 import java.io.OutputStream;
+
 
 public class ControllerFragmentFactory {
 	public static ControllerFragment createControllerFragment(String type,

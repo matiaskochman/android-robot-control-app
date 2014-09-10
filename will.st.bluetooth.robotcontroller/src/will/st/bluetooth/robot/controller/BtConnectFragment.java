@@ -1,10 +1,12 @@
-package will.st.bluetooth.robotcontroller;
+package will.st.bluetooth.robot.controller;
 
 import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.Method;
 import java.util.Set;
 import java.util.UUID;
+
+import will.st.bluetooth.robotcontroller.R;
 
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
