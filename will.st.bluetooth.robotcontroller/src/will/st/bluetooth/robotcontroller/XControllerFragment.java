@@ -13,7 +13,7 @@ import android.widget.ImageButton;
 
 public class XControllerFragment extends ControllerFragment {
 
-	private static final String TAG = "bluetooth1";
+	private static final String TAG = "ROBOT_CONTROLLER";
 
 	ImageButton forwardsButton;
 	ImageButton reverseButton;

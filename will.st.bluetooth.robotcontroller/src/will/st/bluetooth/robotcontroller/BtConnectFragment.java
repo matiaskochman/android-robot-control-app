@@ -24,7 +24,7 @@ import android.widget.Toast;
 
 public class BtConnectFragment extends Fragment {
 
-	private static final String TAG = "bluetooth1";
+	private static final String TAG = "ROBOT_CONTROLLER";
 	private static final int REQUEST_ENABLE_BT = 1;
 
 	// ControllerActivity which this fragment is attached to.

@@ -8,7 +8,7 @@ import android.util.Log;
 
 public abstract class ControllerFragment extends Fragment {
 
-	private static final String TAG = "bluetooth1";
+	private static final String TAG = "ROBOT_CONTROLLER";
 	
 	// Used to send data via Bluetooth.
 	protected OutputStream outStream = null;
