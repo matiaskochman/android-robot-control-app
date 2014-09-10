@@ -47,7 +47,7 @@ public class ControllerActivityTest {
 		activity.setConnectFrag(mockBtConnectFragment);
 		activity = controller.resume().get();
 		
-		activity.setSpecifiedControllerFragment("will.st.bluetooth.robotcontroller.XControllerFragment");
+		activity.setSpecifiedControllerFragment("XControllerFragment");
 		activity.onConnectionMade(Mockito.mock(BluetoothSocket.class), Mockito.mock(OutputStream.class));
 		
 		FragmentManager fragmentManager = activity.getSupportFragmentManager();

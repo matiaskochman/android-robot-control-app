@@ -32,9 +32,11 @@ public class MainMenuActivityTest {
 
 		ShadowActivity shadowActivity = Robolectric.shadowOf_(activity);
 
-		Intent expectedIntent = new Intent(activity.getApplicationContext(), ControllerActivity.class);
-		expectedIntent.putExtra(activity.getFragmentKey(),
-				"will.st.bluetooth.robotcontroller.XControllerFragment");
-		assertThat(shadowActivity.getNextStartedActivity(), equalTo(expectedIntent));
+		Intent expectedIntent = new Intent(activity.getApplicationContext(),
+				ControllerActivity.class);
+		expectedIntent.putExtra(MainMenuActivity.SELECTED_CONTROLLER_FRAGMENT,
+				"XControllerFragment");
+		assertThat(shadowActivity.getNextStartedActivity(),
+				equalTo(expectedIntent));
 	}
 }

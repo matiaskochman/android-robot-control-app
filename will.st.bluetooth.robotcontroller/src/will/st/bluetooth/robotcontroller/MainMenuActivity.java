@@ -10,11 +10,10 @@ import android.widget.ImageButton;
 
 public class MainMenuActivity extends Activity {
 
-	private static final String TAG = "bluetooth1";
+	public static final String SELECTED_CONTROLLER_FRAGMENT = "will.st.bluetooth.robot."
+			+ "controller.CONTROLLER";
+	private static final String TAG = "ROBOT_CONTROLLER";
 	private ImageButton xButton;
-	
-	// Key for the info which we will be put into our intent.
-	public static final String FRAGMENT_KEY = "Specific controller fragment name";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -25,23 +24,21 @@ public class MainMenuActivity extends Activity {
 		xButton = (ImageButton) findViewById(R.id.x_button);
 		xButton.setOnClickListener(new XButtonListener());
 	}
-	
+
 	class XButtonListener implements OnClickListener {
 		public void onClick(View v) {
 			Log.d(TAG, "...In MainMenuActivity startXController(View view)...");
 
-			Intent controllerActivityIntent = new Intent(getApplicationContext(), ControllerActivity.class);
-			// This will inform the next activity which ControllerFragment to use.
-			controllerActivityIntent.putExtra(getFragmentKey(),
-					"will.st.bluetooth.robotcontroller.XControllerFragment");
+			Intent controllerActivityIntent = new Intent(
+					getApplicationContext(), ControllerActivity.class);
+			// This will inform the next activity which ControllerFragment to
+			// use.
+			controllerActivityIntent.putExtra(SELECTED_CONTROLLER_FRAGMENT,
+					"XControllerFragment");
 
 			Log.d(TAG, "In MainMenuActivity startXController(View view),"
 					+ " starting ControllerActivity.");
 			startActivity(controllerActivityIntent);
-		}	
-	}
-	
-	public static String getFragmentKey() {
-		return FRAGMENT_KEY;
+		}
 	}
 }

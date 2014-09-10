@@ -13,9 +13,9 @@ import android.util.Log;
 public class ControllerActivity extends FragmentActivity implements
 		BtConnectFragment.BtConnectionMadeListener {
 
-	private final static String TAG = "bluetooth1";
+	private final static String TAG = "ROBOT_CONTROLLER";
 	// Tells us which controller fragment to use
-	private static String specifiedControllerFragment;
+	private static String selectedControllerFragment;
 
 	private ControllerFragment controlFrag;
 	private BtConnectFragment connectFrag;
@@ -29,9 +29,9 @@ public class ControllerActivity extends FragmentActivity implements
 		Log.d(TAG, "...In ControllerActivity "
 				+ "onCreate(Bundle savedInstanceState)...");
 		setContentView(R.layout.activity_controller);
-		
-		specifiedControllerFragment = getIntent().getStringExtra(
-				MainMenuActivity.getFragmentKey());
+
+		selectedControllerFragment = getIntent().getStringExtra(
+				MainMenuActivity.SELECTED_CONTROLLER_FRAGMENT);
 
 		connectFrag = new BtConnectFragment();
 	}
@@ -40,8 +40,6 @@ public class ControllerActivity extends FragmentActivity implements
 	protected void onResume() {
 		super.onResume();
 		Log.d(TAG, "...In ControllerActivity onResume()...");
-		
-		// Start and show a BTConnectFragment.
 		getSupportFragmentManager()
 				.beginTransaction()
 				.replace(R.id.controller_activity_frame_layout, connectFrag,
@@ -53,11 +51,9 @@ public class ControllerActivity extends FragmentActivity implements
 	@Override
 	protected void onPause() {
 		super.onPause();
-		
+
 		Log.d(TAG, "...In ControllerActivity onPause()...");
 
-		Log.d(TAG, "In ControllerActivity onPause(),"
-				+ " Flushing data output stream.");
 		if (outStream != null) {
 			try {
 				outStream.flush();
@@ -68,8 +64,6 @@ public class ControllerActivity extends FragmentActivity implements
 			outStream = null;
 		}
 
-		Log.d(TAG, "In ControllerActivity onPause(),"
-				+ " closing bluetooth socket.");
 		if (btSocket != null) {
 			try {
 				btSocket.close();
@@ -82,69 +76,30 @@ public class ControllerActivity extends FragmentActivity implements
 		}
 	}
 
-	// Called to swap our ConnectFragment for a ControllerFragment once 
+	// Call to swap our BtConnectFragment for a ControllerFragment once
 	// connectFrag establishes a connection.
 	public void onConnectionMade(BluetoothSocket btSocket,
 			OutputStream outStream) {
 		Log.d(TAG, "...In ControllerActivity onConnectionMade()...");
+
 		this.btSocket = btSocket;
 		this.outStream = outStream;
 
-		// We need to instantiate a subclass of ControllerFragment, but do not
-		// know which subclass until runtime.
-		Class<? extends ControllerFragment> controllerFragmentSubclass = null;
-		Constructor<?> cons = null;
+		controlFrag = ControllerFragmentFactory.createControllerFragment(
+				selectedControllerFragment, outStream);
 
-		// Get the required subclass of ControllerFragment based on
-		// information from the intent which started this activity.
-		try {
-			controllerFragmentSubclass = Class.forName(
-					specifiedControllerFragment).asSubclass(
-					ControllerFragment.class);
-		} catch (ClassNotFoundException e) {
-			Log.e(TAG, "In ControllerActivity onConnectionMade(),"
-					+ " could not find specified ControllerFragment.", e);
-		}
-
-		// Get this subclass's constructor.
-		try {
-			cons = controllerFragmentSubclass
-					.getConstructor(OutputStream.class);
-		} catch (NoSuchMethodException e) {
-			Log.e(TAG, "In ControllerActivity onConnectionMade(),"
-					+ " could not get ControllerFragment constructor.", e);
-			e.printStackTrace();
-		}
-
-		// Create an instance of this subclass.
-		try {
-			controlFrag = (ControllerFragment) cons.newInstance(outStream);
-		} catch (InstantiationException | IllegalAccessException
-				| IllegalArgumentException | InvocationTargetException e) {
-			Log.e(TAG, "In ControllerActivity onConnectionMade(),"
-					+ " could not instantiate given ControllerFragment.", e);
-			e.printStackTrace();
-		}
-
-		// Replace the BtConnectionFragment with our instance of the
-		// ControllerFragment subclass.
 		getSupportFragmentManager()
 				.beginTransaction()
 				.replace(R.id.controller_activity_frame_layout, controlFrag,
 						"control").commit();
 	}
-	
+
 	public void setConnectFrag(BtConnectFragment connectFrag) {
 		this.connectFrag = connectFrag;
 	}
-	
+
 	public static void setSpecifiedControllerFragment(
 			String specifiedControllerFragment) {
-		ControllerActivity.specifiedControllerFragment = specifiedControllerFragment;
-	}
-	
-	public void onDestroy() {
-		super.onDestroy();
-		Log.d(TAG, "...In ControllerActivity onDestroy()");
+		ControllerActivity.selectedControllerFragment = specifiedControllerFragment;
 	}
 }
