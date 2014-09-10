@@ -15,13 +15,13 @@ public class ControllerActivity extends FragmentActivity implements
 
 	private final static String TAG = "ROBOT_CONTROLLER";
 	// Tells us which controller fragment to use
-	private static String selectedControllerFragment;
+	private static String sSelectedControllerFragment;
 
-	private ControllerFragment controlFrag;
-	private BtConnectFragment connectFrag;
+	private ControllerFragment mControllerFragment;
+	private BtConnectFragment mBtConnectFragment;
 	// These are used to send data via Bluetooth.
-	private OutputStream outStream;
-	private BluetoothSocket btSocket;
+	private OutputStream mOutputStream;
+	private BluetoothSocket mBluetoothSocket;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -30,10 +30,10 @@ public class ControllerActivity extends FragmentActivity implements
 				+ "onCreate(Bundle savedInstanceState)...");
 		setContentView(R.layout.activity_controller);
 
-		selectedControllerFragment = getIntent().getStringExtra(
+		sSelectedControllerFragment = getIntent().getStringExtra(
 				MainMenuActivity.SELECTED_CONTROLLER_FRAGMENT);
 
-		connectFrag = new BtConnectFragment();
+		mBtConnectFragment = new BtConnectFragment();
 	}
 
 	@Override
@@ -42,7 +42,7 @@ public class ControllerActivity extends FragmentActivity implements
 		Log.d(TAG, "...In ControllerActivity onResume()...");
 		getSupportFragmentManager()
 				.beginTransaction()
-				.replace(R.id.controller_activity_frame_layout, connectFrag,
+				.replace(R.id.controller_activity_frame_layout, mBtConnectFragment,
 						"connect").commit();
 		getSupportFragmentManager().executePendingTransactions();
 
@@ -54,24 +54,24 @@ public class ControllerActivity extends FragmentActivity implements
 
 		Log.d(TAG, "...In ControllerActivity onPause()...");
 
-		if (outStream != null) {
+		if (mOutputStream != null) {
 			try {
-				outStream.flush();
+				mOutputStream.flush();
 			} catch (IOException e) {
 				Log.e(TAG, "In ControllerActivity onPause(),"
 						+ " failed to flush output stream.", e);
 			}
-			outStream = null;
+			mOutputStream = null;
 		}
 
-		if (btSocket != null) {
+		if (mBluetoothSocket != null) {
 			try {
-				btSocket.close();
+				mBluetoothSocket.close();
 			} catch (IOException e) {
 				Log.e(TAG, "In ControllerActivity onPause(),"
 						+ " failed to close socket.", e);
 			}
-			btSocket = null;
+			mBluetoothSocket = null;
 			finish();
 		}
 	}
@@ -79,27 +79,27 @@ public class ControllerActivity extends FragmentActivity implements
 	// Call to swap our BtConnectFragment for a ControllerFragment once
 	// connectFrag establishes a connection.
 	public void onConnectionMade(BluetoothSocket btSocket,
-			OutputStream outStream) {
+			OutputStream outputStream) {
 		Log.d(TAG, "...In ControllerActivity onConnectionMade()...");
 
-		this.btSocket = btSocket;
-		this.outStream = outStream;
+		this.mBluetoothSocket = btSocket;
+		this.mOutputStream = outputStream;
 
-		controlFrag = ControllerFragmentFactory.createControllerFragment(
-				selectedControllerFragment, outStream);
+		mControllerFragment = ControllerFragmentFactory.createControllerFragment(
+				sSelectedControllerFragment, outputStream);
 
 		getSupportFragmentManager()
 				.beginTransaction()
-				.replace(R.id.controller_activity_frame_layout, controlFrag,
+				.replace(R.id.controller_activity_frame_layout, mControllerFragment,
 						"control").commit();
 	}
 
 	public void setConnectFrag(BtConnectFragment connectFrag) {
-		this.connectFrag = connectFrag;
+		this.mBtConnectFragment = connectFrag;
 	}
 
 	public static void setSpecifiedControllerFragment(
 			String specifiedControllerFragment) {
-		ControllerActivity.selectedControllerFragment = specifiedControllerFragment;
+		ControllerActivity.sSelectedControllerFragment = specifiedControllerFragment;
 	}
 }

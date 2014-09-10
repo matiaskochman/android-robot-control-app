@@ -27,7 +27,6 @@ public class BtConnectFragment extends Fragment {
 	private static final String TAG = "ROBOT_CONTROLLER";
 	private static final int REQUEST_ENABLE_BT = 1;
 
-	// ControllerActivity which this fragment is attached to.
 	private BtConnectionMadeListener parentActivity;
 
 	// UUID and MAC address required to make a Bluetooth connection.
@@ -35,8 +34,8 @@ public class BtConnectFragment extends Fragment {
 			.fromString("00001101-0000-1000-8000-00805F9B34FB");
 	private static String address;
 
-	// An AsyncTask to make our Bluetooth connection in the background
-	private ConnectBtTask connectionThread;
+	// An AsyncTask to have our Bluetooth connection in the background.
+	private BtConnectTask connectionThread;
 
 	private boolean connectionMade;
 
@@ -56,8 +55,6 @@ public class BtConnectFragment extends Fragment {
 		super.onAttach(activity);
 		Log.d(TAG, "...In BtConnectFragment"
 				+ " onAttach(Activity activity)...");
-		// This makes sure that the container activity has implemented
-		// the callback interface.
 		try {
 			parentActivity = (BtConnectionMadeListener) activity;
 		} catch (ClassCastException e) {
@@ -80,7 +77,7 @@ public class BtConnectFragment extends Fragment {
 		super.onResume();
 		Log.d(TAG, "...In BtConnectFragment onResume...");
 		connectionMade = false;
-		connectionThread = new ConnectBtTask();
+		connectionThread = new BtConnectTask();
 		connectionThread.execute();
 	}
 
@@ -118,7 +115,7 @@ public class BtConnectFragment extends Fragment {
 		}
 	}
 
-	private class ConnectBtTask extends AsyncTask<Void, Void, String> {
+	private class BtConnectTask extends AsyncTask<Void, Void, String> {
 		private Exception connectionFailedException = null;
 
 		@Override

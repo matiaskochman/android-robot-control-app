@@ -20,13 +20,13 @@ import android.content.Intent;
 @RunWith(RobolectricTestRunner.class)
 public class MainMenuActivityTest {
 
-	private final ActivityController<MainMenuActivity> controller = Robolectric
+	private final ActivityController<MainMenuActivity> mActivityController = Robolectric
 			.buildActivity(MainMenuActivity.class);
 
 	@Test
 	public void testXButtonClickShouldFiresCorrectIntent() {
 		// Create, start and resume activity under test.
-		MainMenuActivity activity = controller.create().start().resume().get();
+		MainMenuActivity activity = mActivityController.create().start().resume().get();
 		// Click button to start next activity.
 		activity.findViewById(R.id.x_button).performClick();
 

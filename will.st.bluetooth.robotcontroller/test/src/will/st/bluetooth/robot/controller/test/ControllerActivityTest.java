@@ -21,7 +21,7 @@ import android.support.v4.app.FragmentManager;
 @RunWith(RobolectricTestRunner.class)
 public class ControllerActivityTest {
 
-	private final ActivityController<ControllerActivity> controller = Robolectric
+	private final ActivityController<ControllerActivity> mActivityController = Robolectric
 			.buildActivity(ControllerActivity.class);
 
 	@Test
@@ -29,9 +29,9 @@ public class ControllerActivityTest {
 		BtConnectFragment mockBtConnectFragment = Mockito
 				.mock(BtConnectFragment.class);
 		// Create, start and resume activity under test.
-		ControllerActivity activity = controller.create().start().get();
+		ControllerActivity activity = mActivityController.create().start().get();
 		activity.setConnectFrag(mockBtConnectFragment);
-		activity = controller.resume().get();
+		activity = mActivityController.resume().get();
 
 		FragmentManager fragmentManager = activity.getSupportFragmentManager();
 		assertTrue(fragmentManager.findFragmentByTag("connect") != null);
@@ -43,9 +43,9 @@ public class ControllerActivityTest {
 		BtConnectFragment mockBtConnectFragment = Mockito
 				.mock(BtConnectFragment.class);
 		// Create, start and resume activity under test.
-		ControllerActivity activity = controller.create().start().get();
+		ControllerActivity activity = mActivityController.create().start().get();
 		activity.setConnectFrag(mockBtConnectFragment);
-		activity = controller.resume().get();
+		activity = mActivityController.resume().get();
 		
 		activity.setSpecifiedControllerFragment("XControllerFragment");
 		activity.onConnectionMade(Mockito.mock(BluetoothSocket.class), Mockito.mock(OutputStream.class));

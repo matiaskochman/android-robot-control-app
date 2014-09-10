@@ -9,19 +9,17 @@ import android.util.Log;
 public abstract class ControllerFragment extends Fragment {
 
 	private static final String TAG = "ROBOT_CONTROLLER";
+	protected OutputStream mOutputStream = null;
 	
-	// Used to send data via Bluetooth.
-	protected OutputStream outStream = null;
-	
-	public ControllerFragment(OutputStream outStream) {
-		this.outStream = outStream;
+	public ControllerFragment(OutputStream outputStream) {
+		this.mOutputStream = outputStream;
 	}
 
 	@Override
 	public void onPause() {
 		super.onPause();
 		Log.d(TAG, "...In ControllerFragment onPause()...");
-		outStream = null;
+		mOutputStream = null;
 		
 	}
 	
@@ -30,7 +28,7 @@ public abstract class ControllerFragment extends Fragment {
 		Log.d(TAG, "...In ControllerFragment sendData()...");
 		byte[] msgBuffer = message.getBytes();
 		try {
-			outStream.write(msgBuffer);
+			mOutputStream.write(msgBuffer);
 		} catch (IOException e) {
 			Log.e(TAG,
 					"In sendData(String message) an exception occurred during write",

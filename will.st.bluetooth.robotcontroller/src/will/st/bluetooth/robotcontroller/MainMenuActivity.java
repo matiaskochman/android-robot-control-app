@@ -13,7 +13,7 @@ public class MainMenuActivity extends Activity {
 	public static final String SELECTED_CONTROLLER_FRAGMENT = "will.st.bluetooth.robot."
 			+ "controller.CONTROLLER";
 	private static final String TAG = "ROBOT_CONTROLLER";
-	private ImageButton xButton;
+	private ImageButton mXButton;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -21,8 +21,8 @@ public class MainMenuActivity extends Activity {
 		Log.d(TAG, "...In MainMenuActivity "
 				+ "onCreate(Bundle savedInstanceState)...");
 		setContentView(R.layout.activity_main_menu);
-		xButton = (ImageButton) findViewById(R.id.x_button);
-		xButton.setOnClickListener(new XButtonListener());
+		mXButton = (ImageButton) findViewById(R.id.x_button);
+		mXButton.setOnClickListener(new XButtonListener());
 	}
 
 	class XButtonListener implements OnClickListener {

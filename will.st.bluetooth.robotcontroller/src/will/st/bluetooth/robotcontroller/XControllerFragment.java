@@ -14,11 +14,10 @@ import android.widget.ImageButton;
 public class XControllerFragment extends ControllerFragment {
 
 	private static final String TAG = "ROBOT_CONTROLLER";
-
-	ImageButton forwardsButton;
-	ImageButton reverseButton;
-	ImageButton leftButton;
-	ImageButton rightButton;
+	private ImageButton mForwardsButton;
+	private ImageButton mReverseButton;
+	private ImageButton mLeftButton;
+	private ImageButton mRightButton;
 
 	public XControllerFragment(OutputStream outStream) {
 		super(outStream);
@@ -38,17 +37,17 @@ public class XControllerFragment extends ControllerFragment {
 		View rootView = inflater.inflate(R.layout.fragment_x_controller,
 				container, false);
 
-		forwardsButton = (ImageButton) rootView.findViewById(R.id.forwards);
-		forwardsButton.setOnTouchListener(new forwardsListener());
+		mForwardsButton = (ImageButton) rootView.findViewById(R.id.forwards);
+		mForwardsButton.setOnTouchListener(new forwardsListener());
 
-		reverseButton = (ImageButton) rootView.findViewById(R.id.reverse);
-		reverseButton.setOnTouchListener(new reverseListener());
+		mReverseButton = (ImageButton) rootView.findViewById(R.id.reverse);
+		mReverseButton.setOnTouchListener(new reverseListener());
 
-		rightButton = (ImageButton) rootView.findViewById(R.id.right);
-		rightButton.setOnTouchListener(new rightListener());
+		mRightButton = (ImageButton) rootView.findViewById(R.id.right);
+		mRightButton.setOnTouchListener(new rightListener());
 
-		leftButton = (ImageButton) rootView.findViewById(R.id.left);
-		leftButton.setOnTouchListener(new leftListener());
+		mLeftButton = (ImageButton) rootView.findViewById(R.id.left);
+		mLeftButton.setOnTouchListener(new leftListener());
 
 		return rootView;
 	}
