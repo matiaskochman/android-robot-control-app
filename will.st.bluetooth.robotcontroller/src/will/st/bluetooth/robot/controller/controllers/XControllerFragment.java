@@ -16,6 +16,7 @@ import android.widget.ImageButton;
 public class XControllerFragment extends ControllerFragment {
 
 	private static final String TAG = "ROBOT_CONTROLLER";
+	
 	private ImageButton mForwardsButton;
 	private ImageButton mReverseButton;
 	private ImageButton mLeftButton;

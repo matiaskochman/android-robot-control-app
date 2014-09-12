@@ -14,6 +14,7 @@ public class MainMenuActivity extends Activity {
 	public static final String SELECTED_CONTROLLER_FRAGMENT = "will.st.bluetooth.robot."
 			+ "controller.CONTROLLER";
 	private static final String TAG = "ROBOT_CONTROLLER";
+	
 	private ImageButton mXButton;
 
 	@Override

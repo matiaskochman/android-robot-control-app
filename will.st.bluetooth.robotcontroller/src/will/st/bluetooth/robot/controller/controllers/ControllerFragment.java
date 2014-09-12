@@ -9,6 +9,7 @@ import android.util.Log;
 public abstract class ControllerFragment extends Fragment {
 
 	private static final String TAG = "ROBOT_CONTROLLER";
+	
 	protected OutputStream mOutputStream = null;
 	
 	public ControllerFragment(OutputStream outputStream) {
