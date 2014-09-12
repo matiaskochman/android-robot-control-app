@@ -18,6 +18,7 @@ public class ControllerActivity extends FragmentActivity implements
 		BtConnectFragment.BtConnectionMadeListener {
 
 	private final static String TAG = "ROBOT_CONTROLLER";
+	
 	// Tells us which controller fragment to use
 	private static String sSelectedControllerFragment;
 
@@ -37,7 +38,7 @@ public class ControllerActivity extends FragmentActivity implements
 		sSelectedControllerFragment = getIntent().getStringExtra(
 				MainMenuActivity.SELECTED_CONTROLLER_FRAGMENT);
 
-		mBtConnectFragment = new BtConnectFragment();
+		mBtConnectFragment = BtConnectFragment.getInstance();
 	}
 
 	@Override
