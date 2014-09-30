@@ -73,7 +73,7 @@ public class XControllerFragment extends ControllerFragment {
 
 	class reverseListener implements OnTouchListener {
 		public boolean onTouch(View view, MotionEvent event) {
-			Log.d(TAG, "...In forwardsListener onTouch"
+			Log.d(TAG, "...In reverseListener onTouch"
 					+ "(View view, MotionEvent event)...");
 			view.performClick();
 			if (event.getAction() == MotionEvent.ACTION_DOWN) {
@@ -87,7 +87,7 @@ public class XControllerFragment extends ControllerFragment {
 
 	class rightListener implements OnTouchListener {
 		public boolean onTouch(View view, MotionEvent event) {
-			Log.d(TAG, "...In forwardsListener onTouch"
+			Log.d(TAG, "...In rightListener onTouch"
 					+ "(View view, MotionEvent event)...");
 			view.performClick();
 			if (event.getAction() == MotionEvent.ACTION_DOWN) {
@@ -101,7 +101,7 @@ public class XControllerFragment extends ControllerFragment {
 
 	class leftListener implements OnTouchListener {
 		public boolean onTouch(View view, MotionEvent event) {
-			Log.d(TAG, "...In forwardsListener onTouch"
+			Log.d(TAG, "...In leftListener onTouch"
 					+ "(View view, MotionEvent event)...");
 			view.performClick();
 			if (event.getAction() == MotionEvent.ACTION_DOWN) {
