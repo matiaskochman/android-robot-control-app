@@ -4,5 +4,6 @@
     <string name="app_name">Robot Controller</string>
     <string name="connecting">Connecting...</string>
     <string name="action_settings">Settings</string>
+    <string name="crab_toy">crab toy</string>
 
 </resources>
