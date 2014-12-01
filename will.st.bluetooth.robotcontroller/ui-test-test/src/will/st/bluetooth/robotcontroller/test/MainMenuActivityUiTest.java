@@ -11,7 +11,7 @@ import android.widget.RelativeLayout;
 public class MainMenuActivityUiTest extends ActivityInstrumentationTestCase2<MainMenuActivity> {
 
 	private MainMenuActivity activity;
-	private ImageButton xButton;
+	private ImageButton goButton;
 	private RelativeLayout activityLayout;
 	
 	public MainMenuActivityUiTest() {
@@ -27,8 +27,8 @@ public class MainMenuActivityUiTest extends ActivityInstrumentationTestCase2<Mai
         activity = getActivity();
         activityLayout = (RelativeLayout) activity.findViewById(
         		will.st.bluetooth.robotcontroller.R.id.main_menu_relative_layout);
-        xButton = (ImageButton) activity.findViewById(
-        		will.st.bluetooth.robotcontroller.R.id.x_button);
+        goButton = (ImageButton) activity.findViewById(
+        		will.st.bluetooth.robotcontroller.R.id.go_button);
     }
 	
 	public void testPreconditions() {
@@ -37,10 +37,10 @@ public class MainMenuActivityUiTest extends ActivityInstrumentationTestCase2<Mai
 	}
 	
 	@Test
-	public void testXButtonShouldBeCentralOnScreen() {
-		ViewAsserts.assertOnScreen(activityLayout, xButton);
-		ViewAsserts.assertHorizontalCenterAligned(activityLayout, xButton);
-		ViewAsserts.assertVerticalCenterAligned(activityLayout, xButton);
+	public void testGoButtonShouldBeCentralOnScreen() {
+		ViewAsserts.assertOnScreen(activityLayout, goButton);
+		ViewAsserts.assertHorizontalCenterAligned(activityLayout, goButton);
+		ViewAsserts.assertVerticalCenterAligned(activityLayout, goButton);
 	}
 	
 }
