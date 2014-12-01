@@ -2,13 +2,10 @@ package will.st.bluetooth.robot.controller;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 
 import will.st.bluetooth.robot.controller.controllers.ControllerFragment;
 import will.st.bluetooth.robot.controller.controllers.ControllerFragmentFactory;
 import will.st.bluetooth.robotcontroller.R;
-
 import android.bluetooth.BluetoothSocket;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
