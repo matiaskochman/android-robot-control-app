@@ -7,9 +7,9 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-public class MainMenuActivityTest {
+public class ToyMenuActivityTest {
 
-	public MainMenuActivityTest() {
+	public ToyMenuActivityTest() {
 	}
 
 	@BeforeClass

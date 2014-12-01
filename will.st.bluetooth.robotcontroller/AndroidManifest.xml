@@ -15,9 +15,18 @@
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme" >
+        android:theme="@android:style/Theme.Black.NoTitleBar" >
         <activity
             android:name="will.st.bluetooth.robot.controller.MainMenuActivity"
+            android:label="@string/app_name" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="will.st.bluetooth.robot.controller.ToyMenuActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -29,7 +38,7 @@
             android:name="will.st.bluetooth.robot.controller.ControllerActivity"
             android:label="@string/app_name"
             android:screenOrientation="landscape"
-            android:parentActivityName="will.st.bluetooth.robot.controller.MainActivity">
+            android:parentActivityName="will.st.bluetooth.robot.controller.ToyMenuActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="will.st.bluetooth.robotcontroller.MainActivity" />

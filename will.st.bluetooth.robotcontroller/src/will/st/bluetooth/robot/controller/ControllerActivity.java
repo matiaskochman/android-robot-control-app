@@ -36,7 +36,7 @@ public class ControllerActivity extends FragmentActivity implements
 		setContentView(R.layout.activity_controller);
 
 		sSelectedControllerFragment = getIntent().getStringExtra(
-				MainMenuActivity.SELECTED_CONTROLLER_FRAGMENT);
+				ToyMenuActivity.SELECTED_CONTROLLER_FRAGMENT);
 
 		mBtConnectFragment = BtConnectFragment.getInstance();
 	}
